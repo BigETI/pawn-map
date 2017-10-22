@@ -11,7 +11,7 @@ MAP_insert_val_val(map, 1, 2);
 ## Important
 Use `MAP_clear` if you don't need your map anymore, to prevent memory leaks!
 
-## Documentation
+## Documentation (Functions)
 
 ### MAP_insert_val_val
 #### Description
@@ -482,5 +482,78 @@ MAP_insert_val_val(map, 5, 6);
 for (new Pointer:key_ptr, Pointer:value_ptr, key_size, value_size, Map:temp_map = MAP_iter_get(map, key_ptr, value_ptr, key_size, value_size); temp_map != MAP_NULL; temp_map = MAP_iter_next(temp_map, MAP_NULL, key_ptr, value_ptr, key_size, key_value))
 {
 	//
+}
+```
+
+## Documentation (Definitions)
+
+### MAP_MEM_NULL
+#### Description
+A null pointer
+
+### MAP_NULL
+#### Description
+Empty map (null pointer)
+
+### MAP_foreach
+#### Description
+Method to traverse through a map
+#### Syntax
+```C
+MAP_foreach(Map:map : Pointer:key => Pointer:value, key_size => value_size)
+```
+#### Example
+```C
+new Map:map;
+MAP_insert_val_val(map, 1, 2);
+MAP_insert_val_val(map, 3, 4);
+MAP_insert_val_val(map, 5, 6);
+MAP::foreach(map : k => v, k_sz => v_sz)
+{
+	printf("0x%x => 0x%x, %d => %d, \"%d\" => \"%d\"", _:k, _:v, k_sz, v_sz, MEM::get_val(k, _), MEM::get_val(v, _));
+}
+```
+or
+```C
+new Map:map, arr1[10] = {100, ...}, arr2[20] = {200, ...}, arr3[30] = {300, ...}, arr4[40] = {400, ...}, arr5[50] = {500, ...}, arr6[60] = {600, ...}, key[60], value[60], m_k_sz, m_v_sz;
+MAP_insert_arr_arr(map, arr1, _, arr2);
+MAP_insert_arr_arr(map, arr3, _, arr4);
+MAP_insert_arr_arr(map, arr5, _, arr6);
+MAP::foreach(map : k => v, k_sz => v_sz)
+{
+	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
+	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
+	MEM::zero(MEM::get_addr(key[0]), sizeof key);
+	MEM::zero(MEM::get_addr(value[0]), sizeof value);
+	MEM::get_arr(k, _, key, m_k_sz);
+	MEM::get_arr(v, _, value, m_v_sz);
+	printf("0x%x => 0x%x, %d => %d", _:k, _:v, k_sz, v_sz);
+	print("\tKey:");
+	for (new i = 0; i < m_k_sz; i++)
+	{
+		printf("\t\t0x%x", key[i]);
+	}
+	print("\tValue:");
+	for (new i = 0; i < m_v_sz; i++)
+	{
+		printf("\t\t0x%x", value[i]);
+	}
+}
+```
+or
+```C
+new Map:map, key[16], value[6], m_k_sz, m_v_sz;
+MAP_insert_str_str(map, "This is a test.", "foo");
+MAP_insert_str_str(map, "bar", "lorem");
+MAP_insert_str_str(map, "ipsum", "dolor");
+MAP::foreach(map : k => v, k_sz => v_sz)
+{
+	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
+	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
+	MEM::zero(MEM::get_addr(key[0]), sizeof key);
+	MEM::zero(MEM::get_addr(value[0]), sizeof value);
+	MEM::get_arr(k, _, key, m_k_sz);
+	MEM::get_arr(v, _, value, m_v_sz);
+	printf("0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:k, _:v, k_sz, v_sz, key, value);
 }
 ```
