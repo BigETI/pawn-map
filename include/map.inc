@@ -5,8 +5,8 @@
     #include <string>
 
     #if defined MEM_NULL_EX
-        #define MAP_MEM_NULL                Pointer:MEM_EX::NULL
-        #define MAP_NULL                    Map:MEM_EX::NULL
+        #define MAP_MEM_NULL                Pointer:MEM_EX_NULL
+        #define MAP_NULL                    Map:MEM_EX_NULL
     #else
         #define MAP_MEM_NULL                Pointer:NULL
         #define MAP_NULL                    Map:NULL
@@ -15,7 +15,7 @@
     
 
 // Map structure
-MEM::struct MAP_struct
+MEM_struct MAP_struct
 {
     Map:MAP_struct_left,
     Map:MAP_struct_right,
@@ -32,10 +32,10 @@ static stock Pointer:copy_mem(Pointer:ptr, size)
     new Pointer:ret = MAP_MEM_NULL;
     if (size > 0)
     {
-        ret = MEM::malloc(size);
+        ret = MEM_malloc(size);
         if (ret != MAP_MEM_NULL)
         {
-            MEM::copy(ret, ptr, size);
+            MEM_copy(ret, ptr, size);
         }
         else
         {
@@ -52,7 +52,7 @@ static stock MAP_node_compare(Map:map, Pointer:key_ptr, key_size)
     if (map != MAP_NULL)
     {
         new m[MAP_struct], ok, nk;
-        MEM::get_arr(Pointer:map, _, m);
+        MEM_get_arr(Pointer:map, _, m);
         if (key_size < m[MAP_struct_key_size])
         {
             ret = -1;
@@ -65,8 +65,8 @@ static stock MAP_node_compare(Map:map, Pointer:key_ptr, key_size)
         {
             for (new i = 0; i < key_size; i++)
             {
-                ok = MEM::get_val(m[MAP_struct_key_ptr], i);
-                nk = MEM::get_val(key_ptr, i);
+                ok = MEM_get_val(m[MAP_struct_key_ptr], i);
+                nk = MEM_get_val(key_ptr, i);
                 if (nk < ok)
                 {
                     ret = -1;
@@ -88,7 +88,7 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
 {
     if (map == MAP_NULL)
     {
-        map = Map:MEM::malloc(MAP_struct);
+        map = Map:MEM_malloc(MAP_struct);
         if (map != MAP_NULL)
         {
             new m[MAP_struct];
@@ -96,7 +96,7 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
             m[MAP_struct_key_size] = key_size;
             m[MAP_struct_value_ptr] = copy_mem(value_ptr, value_size);
             m[MAP_struct_value_size] = value_size;
-            MEM::set_arr(Pointer:map, _, m);
+            MEM_set_arr(Pointer:map, _, m);
         }
     }
     else
@@ -107,10 +107,10 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
             c = MAP_node_compare(om, key_ptr, key_size);
             if (c < 0)
             {
-                nm = Map:MEM::get_val(Pointer:om, _:MAP_struct_left);
+                nm = Map:MEM_get_val(Pointer:om, _:MAP_struct_left);
                 if (nm == MAP_NULL)
                 {
-                    nm = Map:MEM::malloc(MAP_struct);
+                    nm = Map:MEM_malloc(MAP_struct);
                     if (nm != MAP_NULL)
                     {
                         new m[MAP_struct];
@@ -119,8 +119,8 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
                         m[MAP_struct_key_size] = key_size;
                         m[MAP_struct_value_ptr] = copy_mem(value_ptr, value_size);
                         m[MAP_struct_value_size] = value_size;
-                        MEM::set_arr(Pointer:nm, _, m);
-                        MEM::set_val(Pointer:om, _:MAP_struct_left, _:nm);
+                        MEM_set_arr(Pointer:nm, _, m);
+                        MEM_set_val(Pointer:om, _:MAP_struct_left, _:nm);
                     }
                     break;
                 }
@@ -131,10 +131,10 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
             }
             else if (c > 0)
             {
-                nm = Map:MEM::get_val(Pointer:om, _:MAP_struct_right);
+                nm = Map:MEM_get_val(Pointer:om, _:MAP_struct_right);
                 if (nm == MAP_NULL)
                 {
-                    nm = Map:MEM::malloc(MAP_struct);
+                    nm = Map:MEM_malloc(MAP_struct);
                     if (nm != MAP_NULL)
                     {
                         new m[MAP_struct];
@@ -143,8 +143,8 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
                         m[MAP_struct_key_size] = key_size;
                         m[MAP_struct_value_ptr] = copy_mem(value_ptr, value_size);
                         m[MAP_struct_value_size] = value_size;
-                        MEM::set_arr(Pointer:nm, _, m);
-                        MEM::set_val(Pointer:om, _:MAP_struct_right, _:nm);
+                        MEM_set_arr(Pointer:nm, _, m);
+                        MEM_set_val(Pointer:om, _:MAP_struct_right, _:nm);
                     }
                     break;
                 }
@@ -155,8 +155,8 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
             }
             else
             {
-                MEM::set_val(Pointer:om, _:MAP_struct_value_ptr, _:copy_mem(value_ptr, value_size));
-                MEM::set_val(Pointer:om, MAP_struct_value_size, value_size);
+                MEM_set_val(Pointer:om, _:MAP_struct_value_ptr, _:copy_mem(value_ptr, value_size));
+                MEM_set_val(Pointer:om, MAP_struct_value_size, value_size);
                 break;
             }
         }
@@ -172,11 +172,11 @@ static stock Map:MAP_find(Map:map, Pointer:key_ptr, key_size)
         c = MAP_node_compare(om, key_ptr, key_size);
         if (c < 0)
         {
-            om = Map:MEM::get_val(Pointer:om, _:MAP_struct_left);
+            om = Map:MEM_get_val(Pointer:om, _:MAP_struct_left);
         }
         else if (c > 0)
         {
-            om = Map:MEM::get_val(Pointer:om, _:MAP_struct_right);
+            om = Map:MEM_get_val(Pointer:om, _:MAP_struct_right);
         }
         else
         {
@@ -193,8 +193,8 @@ static stock Pointer:MAP_get_ptr_size(Map:map, Pointer:key_ptr, key_size, &value
     new Pointer:ret = MAP_MEM_NULL, Map:found_map = MAP_find(map, key_ptr, key_size);
     if (found_map != MAP_NULL)
     {
-        value_size = MEM::get_val(Pointer:found_map, MAP_struct_value_size);
-        ret = Pointer:MEM::get_val(Pointer:found_map, _:MAP_struct_value_ptr);
+        value_size = MEM_get_val(Pointer:found_map, MAP_struct_value_size);
+        ret = Pointer:MEM_get_val(Pointer:found_map, _:MAP_struct_value_ptr);
     }
     return ret;
 }
@@ -205,7 +205,7 @@ static stock Map:MAP_find_minimum(Map:map)
     new Map:ret = map, Map:m = map;
     while (m != MAP_NULL)
     {
-        m = Map:MEM::get_val(Pointer:map, _:MAP_struct_left);
+        m = Map:MEM_get_val(Pointer:map, _:MAP_struct_left);
         if (m != MAP_NULL)
         {
             ret = m;
@@ -222,11 +222,11 @@ static stock MAP_remove_found(&Map:parent_map, Map:found_map)
         parent_map = MAP_NULL;
     }
     new m[MAP_struct], pm[MAP_struct], bool:hp;
-    MEM::get_arr(Pointer:found_map, _, m);
+    MEM_get_arr(Pointer:found_map, _, m);
     hp = (m[MAP_struct_parent] != MAP_NULL);
     if (hp)
     {
-        MEM::get_arr(Pointer:m[MAP_struct_parent], _, pm);
+        MEM_get_arr(Pointer:m[MAP_struct_parent], _, pm);
     }
     if (m[MAP_struct_left] == MAP_NULL)
     {
@@ -237,16 +237,16 @@ static stock MAP_remove_found(&Map:parent_map, Map:found_map)
             {
                 if (pm[MAP_struct_left] == found_map)
                 {
-                    MEM::set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_left, _:MAP_NULL);
+                    MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_left, _:MAP_NULL);
                 }
                 else
                 {
-                    MEM::set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:MAP_NULL);
+                    MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:MAP_NULL);
                 }
             }
-            MEM::free(m[MAP_struct_key_ptr]);
-            MEM::free(m[MAP_struct_value_ptr]);
-            MEM::free(Pointer:found_map);
+            MEM_free(m[MAP_struct_key_ptr]);
+            MEM_free(m[MAP_struct_value_ptr]);
+            MEM_free(Pointer:found_map);
         }
         else
         {
@@ -255,16 +255,16 @@ static stock MAP_remove_found(&Map:parent_map, Map:found_map)
             {
                 if (pm[MAP_struct_left] == found_map)
                 {
-                    MEM::set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_left, _:m[MAP_struct_right]);
+                    MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_left, _:m[MAP_struct_right]);
                 }
                 else
                 {
-                    MEM::set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:m[MAP_struct_right]);
+                    MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:m[MAP_struct_right]);
                 }
             }
-            MEM::free(m[MAP_struct_key_ptr]);
-            MEM::free(m[MAP_struct_value_ptr]);
-            MEM::free(Pointer:found_map);
+            MEM_free(m[MAP_struct_key_ptr]);
+            MEM_free(m[MAP_struct_value_ptr]);
+            MEM_free(Pointer:found_map);
         }
     }
     else
@@ -276,38 +276,38 @@ static stock MAP_remove_found(&Map:parent_map, Map:found_map)
             {
                 if (pm[MAP_struct_left] == found_map)
                 {
-                    MEM::set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_left, _:m[MAP_struct_left]);
+                    MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_left, _:m[MAP_struct_left]);
                 }
                 else
                 {
-                    MEM::set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:m[MAP_struct_left]);
+                    MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:m[MAP_struct_left]);
                 }
             }
-            MEM::free(m[MAP_struct_key_ptr]);
-            MEM::free(m[MAP_struct_value_ptr]);
-            MEM::free(Pointer:found_map);
+            MEM_free(m[MAP_struct_key_ptr]);
+            MEM_free(m[MAP_struct_value_ptr]);
+            MEM_free(Pointer:found_map);
         }
         else
         {
             // Case 3
             new Map:min_map = MAP_find_minimum(m[MAP_struct_right]), mm[MAP_struct], Pointer:key_ptr;
-            MEM::get_arr(Pointer:min_map, _, mm);
-            key_ptr = MEM::malloc(mm[MAP_struct_key_size]);
+            MEM_get_arr(Pointer:min_map, _, mm);
+            key_ptr = MEM_malloc(mm[MAP_struct_key_size]);
             if (key_ptr != MAP_MEM_NULL)
             {
-                new Pointer:value_ptr = MEM::malloc(mm[MAP_struct_value_size]);
+                new Pointer:value_ptr = MEM_malloc(mm[MAP_struct_value_size]);
                 if (value_ptr == MAP_MEM_NULL)
                 {
-                    MEM::free(key_ptr);
+                    MEM_free(key_ptr);
                 }
                 else
                 {
-                    MEM::copy(key_ptr, mm[MAP_struct_key_ptr], mm[MAP_struct_key_size]);
-                    MEM::copy(value_ptr, mm[MAP_struct_value_ptr], mm[MAP_struct_value_size]);
-                    MEM::free(m[MAP_struct_key_ptr]);
-                    MEM::free(m[MAP_struct_value_ptr]);
-                    MEM::set_val(Pointer:found_map, _:MAP_struct_key_ptr, _:key_ptr);
-                    MEM::set_val(Pointer:found_map, _:MAP_struct_value_ptr, _:value_ptr);
+                    MEM_copy(key_ptr, mm[MAP_struct_key_ptr], mm[MAP_struct_key_size]);
+                    MEM_copy(value_ptr, mm[MAP_struct_value_ptr], mm[MAP_struct_value_size]);
+                    MEM_free(m[MAP_struct_key_ptr]);
+                    MEM_free(m[MAP_struct_value_ptr]);
+                    MEM_set_val(Pointer:found_map, _:MAP_struct_key_ptr, _:key_ptr);
+                    MEM_set_val(Pointer:found_map, _:MAP_struct_value_ptr, _:value_ptr);
                     MAP_remove_found(parent_map, min_map);
                 }
             }
@@ -328,18 +328,18 @@ static stock MAP_remove(&Map:map, Pointer:key_ptr, key_size)
 // Map insert (key, value)
 stock MAP_insert_val_val(&Map:map, key, value)
 {
-    new Pointer:k = MEM::malloc();
+    new Pointer:k = MEM_malloc();
     if (k != MAP_MEM_NULL)
     {
-        new Pointer:v = MEM::malloc();
+        new Pointer:v = MEM_malloc();
         if (v != MAP_MEM_NULL)
         {
-            MEM::set_val(k, _, key);
-            MEM::set_val(v, _, value);
+            MEM_set_val(k, _, key);
+            MEM_set_val(v, _, value);
             MAP_insert(map, k, 1, v, 1);
-            MEM::free(v);
+            MEM_free(v);
         }
-        MEM::free(k);
+        MEM_free(k);
     }
 }
 
@@ -348,18 +348,18 @@ stock MAP_insert_val_arr(&Map:map, key, const value[], value_size = sizeof value
 {
     if (value_size > 0)
     {
-        new Pointer:k = MEM::malloc();
+        new Pointer:k = MEM_malloc();
         if (k != MAP_MEM_NULL)
         {
-            new Pointer:v = MEM::malloc(value_size);
+            new Pointer:v = MEM_malloc(value_size);
             if (v != MAP_MEM_NULL)
             {
-                MEM::set_val(k, _, key);
-                MEM::set_arr(v, _, value, value_size);
+                MEM_set_val(k, _, key);
+                MEM_set_arr(v, _, value, value_size);
                 MAP_insert(map, k, 1, v, value_size);
-                MEM::free(v);
+                MEM_free(v);
             }
-            MEM::free(k);
+            MEM_free(k);
         }
     }
 }
@@ -369,18 +369,18 @@ stock MAP_insert_arr_val(&Map:map, const key[], key_size = sizeof key, value)
 {
     if (key_size > 0)
     {
-        new Pointer:k = MEM::malloc(key_size);
+        new Pointer:k = MEM_malloc(key_size);
         if (k != MAP_MEM_NULL)
         {
-            new Pointer:v = MEM::malloc();
+            new Pointer:v = MEM_malloc();
             if (v != MAP_MEM_NULL)
             {
-                MEM::set_arr(k, _, key, key_size);
-                MEM::set_val(v, _, value);
+                MEM_set_arr(k, _, key, key_size);
+                MEM_set_val(v, _, value);
                 MAP_insert(map, k, key_size, v, 1);
-                MEM::free(v);
+                MEM_free(v);
             }
-            MEM::free(k);
+            MEM_free(k);
         }
     }
 }
@@ -390,18 +390,18 @@ stock MAP_insert_arr_arr(&Map:map, const key[], key_size = sizeof key, const val
 {
     if ((value_size > 0) && (key_size > 0))
     {
-        new Pointer:k = MEM::malloc(key_size);
+        new Pointer:k = MEM_malloc(key_size);
         if (k != MAP_MEM_NULL)
         {
-            new Pointer:v = MEM::malloc(value_size);
+            new Pointer:v = MEM_malloc(value_size);
             if (v != MAP_MEM_NULL)
             {
-                MEM::set_arr(k, _, key, key_size);
-                MEM::set_arr(v, _, value, value_size);
+                MEM_set_arr(k, _, key, key_size);
+                MEM_set_arr(v, _, value, value_size);
                 MAP_insert(map, k, key_size, v, value_size);
-                MEM::free(v);
+                MEM_free(v);
             }
-            MEM::free(k);
+            MEM_free(k);
         }
     }
 }
@@ -443,12 +443,12 @@ stock Pointer:MAP_get_ptr_size_val(Map:map, key, &value_size)
     value_size = 0;
     if (map != MAP_NULL)
     {
-        new Pointer:key_ptr = MEM::malloc();
+        new Pointer:key_ptr = MEM_malloc();
         if (key_ptr != MAP_MEM_NULL)
         {
-            MEM::set_val(key_ptr, _, key);
+            MEM_set_val(key_ptr, _, key);
             ret = MAP_get_ptr_size(map, key_ptr, 1, value_size);
-            MEM::free(key_ptr);
+            MEM_free(key_ptr);
         }
     }
     return ret;
@@ -461,12 +461,12 @@ stock Pointer:MAP_get_ptr_size_arr(Map:map, const key[], key_size, &value_size)
     value_size = 0;
     if ((map != MAP_NULL) && (key_size > 0))
     {
-        new Pointer:key_ptr = MEM::malloc(key_size);
+        new Pointer:key_ptr = MEM_malloc(key_size);
         if (key_ptr != MAP_MEM_NULL)
         {
-            MEM::set_arr(key_ptr, _, key, key_size);
+            MEM_set_arr(key_ptr, _, key, key_size);
             ret = MAP_get_ptr_size(map, key_ptr, key_size, value_size);
-            MEM::free(key_ptr);
+            MEM_free(key_ptr);
         }
     }
     return ret;
@@ -484,11 +484,11 @@ stock bool:MAP_contains_val(Map:map, key)
     new bool:ret = false;
     if (map != MAP_NULL)
     {
-        new Pointer:key_ptr = MEM::malloc();
+        new Pointer:key_ptr = MEM_malloc();
         if (key_ptr != MAP_MEM_NULL)
         {
             ret = (MAP_find(map, key_ptr, 1) != MAP_NULL);
-            MEM::free(key_ptr);
+            MEM_free(key_ptr);
         }
     }
     return ret;
@@ -500,11 +500,11 @@ stock bool:MAP_contains_arr(Map:map, const key[], key_size = sizeof key)
     new bool:ret = false;
     if ((map != MAP_NULL) && (key_size > 0))
     {
-        new Pointer:key_ptr = MEM::malloc(key_size);
+        new Pointer:key_ptr = MEM_malloc(key_size);
         if (key_ptr != MAP_MEM_NULL)
         {
             ret = (MAP_find(map, key_ptr, key_size) != MAP_NULL);
-            MEM::free(key_ptr);
+            MEM_free(key_ptr);
         }
     }
     return ret;
@@ -522,7 +522,7 @@ stock MAP_get_val_val(Map:map, key)
     new ret, v_sz, Pointer:ptr = MAP_get_ptr_size_val(map, key, v_sz);
     if ((ptr != MAP_MEM_NULL) && (v_sz > 0))
     {
-        ret = MEM::get_val(ptr);
+        ret = MEM_get_val(ptr);
     }
     return ret;
 }
@@ -533,7 +533,7 @@ stock MAP_get_val_arr(Map:map, key, value[], value_size = sizeof value)
     new v_sz, Pointer:ptr = MAP_get_ptr_size_val(map, key, v_sz);
     if ((ptr != MAP_MEM_NULL) && (v_sz > 0))
     {
-        MEM::get_arr(ptr, _, value, (v_sz < value_size) ? v_sz : value_size);
+        MEM_get_arr(ptr, _, value, (v_sz < value_size) ? v_sz : value_size);
     }
 }
 
@@ -543,7 +543,7 @@ stock MAP_get_arr_val(Map:map, const key[], key_size = sizeof key)
     new ret, v_sz, Pointer:ptr = MAP_get_ptr_size_arr(map, key, key_size, v_sz);
     if ((ptr != MAP_MEM_NULL) && (v_sz > 0))
     {
-        ret = MEM::get_val(ptr);
+        ret = MEM_get_val(ptr);
     }
     return ret;
 }
@@ -554,7 +554,7 @@ stock MAP_get_arr_arr(Map:map, const key[], key_size = sizeof key, value[], valu
     new v_sz, Pointer:ptr = MAP_get_ptr_size_arr(map, key, key_size, v_sz);
     if ((ptr != MAP_MEM_NULL) && (v_sz > 0))
     {
-        MEM::get_arr(ptr, _, value, (v_sz < value_size) ? v_sz : value_size);
+        MEM_get_arr(ptr, _, value, (v_sz < value_size) ? v_sz : value_size);
     }
 }
 
@@ -577,7 +577,7 @@ stock MAP_count(Map:map)
     if (map != MAP_NULL)
     {
         new m[MAP_struct];
-        MEM::get_arr(Pointer:map, _, m);
+        MEM_get_arr(Pointer:map, _, m);
         ret = 1;
         ret += MAP_count(m[MAP_struct_left]);
         ret += MAP_count(m[MAP_struct_right]);
@@ -590,12 +590,12 @@ stock MAP_remove_val(&Map:map, key)
 {
     if (map != MAP_NULL)
     {
-        new Pointer:key_ptr = MEM::malloc();
+        new Pointer:key_ptr = MEM_malloc();
         if (key_ptr != MAP_MEM_NULL)
         {
-            MEM::set_val(key_ptr, _, key);
+            MEM_set_val(key_ptr, _, key);
             MAP_remove(map, key_ptr, 1);
-            MEM::free(key_ptr);
+            MEM_free(key_ptr);
         }
     }
 }
@@ -605,12 +605,12 @@ stock MAP_remove_arr(&Map:map, const key[], key_size = sizeof key)
 {
     if ((map != MAP_NULL) && (key_size > 0))
     {
-        new Pointer:key_ptr = MEM::malloc(key_size);
+        new Pointer:key_ptr = MEM_malloc(key_size);
         if (key_ptr != MAP_MEM_NULL)
         {
-            MEM::set_arr(key_ptr, _, key, key_size);
+            MEM_set_arr(key_ptr, _, key, key_size);
             MAP_remove(map, key_ptr, key_size);
-            MEM::free(key_ptr);
+            MEM_free(key_ptr);
         }
     }
 }
@@ -627,12 +627,12 @@ stock MAP_clear(&Map:map)
     if (map != MAP_NULL)
     {
         new m[MAP_struct];
-        MEM::get_arr(Pointer:map, _, m);
+        MEM_get_arr(Pointer:map, _, m);
         MAP_clear(m[MAP_struct_left]);
         MAP_clear(m[MAP_struct_right]);
-        MEM::free(m[MAP_struct_key_ptr]);
-        MEM::free(m[MAP_struct_value_ptr]);
-        MEM::free(Pointer:map);
+        MEM_free(m[MAP_struct_key_ptr]);
+        MEM_free(m[MAP_struct_value_ptr]);
+        MEM_free(Pointer:map);
         map = MAP_NULL;
     }
 }
@@ -643,7 +643,7 @@ stock Map:MAP_iter_get(Map:map, &Pointer:key_ptr, &Pointer:value_ptr, &key_size,
     if (map != MAP_NULL)
     {
         new m[MAP_struct];
-        MEM::get_arr(Pointer:map, _, m);
+        MEM_get_arr(Pointer:map, _, m);
         key_ptr = m[MAP_struct_key_ptr];
         value_ptr = m[MAP_struct_value_ptr];
         key_size = m[MAP_struct_key_size];
@@ -659,7 +659,7 @@ stock Map:MAP_iter_next(Map:map, Map:invoker, &Pointer:key_ptr, &Pointer:value_p
     if (map != MAP_NULL)
     {
         new m[MAP_struct];
-        MEM::get_arr(Pointer:map, _, m);
+        MEM_get_arr(Pointer:map, _, m);
         if (m[MAP_struct_left] != MAP_NULL)
         {
             ret = ((invoker == m[MAP_struct_left]) ?
@@ -679,6 +679,4 @@ stock Map:MAP_iter_next(Map:map, Map:invoker, &Pointer:key_ptr, &Pointer:value_p
     }
     return ret;
 }
-
-#define MAP::                               MAP_
 #endif

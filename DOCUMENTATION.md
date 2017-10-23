@@ -1,13 +1,5 @@
 # Map implementation in PAWN
 
-## Notes
-Using `Map::` is equivalent to using `MAP_`, for example:
-```C
-MAP::insert_val_val(map, 1, 2);
-// Is equivalent to
-MAP_insert_val_val(map, 1, 2);
-```
-
 ## Important
 Use `MAP_clear` if you don't need your map anymore, to prevent memory leaks!
 
@@ -508,7 +500,7 @@ new Map:map;
 MAP_insert_val_val(map, 1, 2);
 MAP_insert_val_val(map, 3, 4);
 MAP_insert_val_val(map, 5, 6);
-MAP::foreach(map : k => v, k_sz => v_sz)
+MAP_foreach(map : k => v, k_sz => v_sz)
 {
 	printf("0x%x => 0x%x, %d => %d, \"%d\" => \"%d\"", _:k, _:v, k_sz, v_sz, MEM::get_val(k, _), MEM::get_val(v, _));
 }
@@ -519,7 +511,7 @@ new Map:map, arr1[10] = {100, ...}, arr2[20] = {200, ...}, arr3[30] = {300, ...}
 MAP_insert_arr_arr(map, arr1, _, arr2);
 MAP_insert_arr_arr(map, arr3, _, arr4);
 MAP_insert_arr_arr(map, arr5, _, arr6);
-MAP::foreach(map : k => v, k_sz => v_sz)
+MAP_foreach(map : k => v, k_sz => v_sz)
 {
 	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
 	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
@@ -546,7 +538,7 @@ new Map:map, key[16], value[6], m_k_sz, m_v_sz;
 MAP_insert_str_str(map, "This is a test.", "foo");
 MAP_insert_str_str(map, "bar", "lorem");
 MAP_insert_str_str(map, "ipsum", "dolor");
-MAP::foreach(map : k => v, k_sz => v_sz)
+MAP_foreach(map : k => v, k_sz => v_sz)
 {
 	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
 	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
