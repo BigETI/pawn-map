@@ -32,9 +32,9 @@ MAP_insert_val_arr(map, 1, arr);
 ```
 
 ### MAP_insert_arr_val
-####Description
+#### Description
 Map insert (key[], value)
-####Syntax
+#### Syntax
 ```C
 MAP_insert_arr_val(&Map:map, const key[], key_size = sizeof key, value)
 ```
