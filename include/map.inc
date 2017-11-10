@@ -12,7 +12,6 @@
         #define MAP_NULL                    Map:NULL
     #endif
     #define MAP_foreach%5(%0:%1=>%2,%3=>%4) for (new Pointer:%1, Pointer:%2, %3, %4, Map:__m = MAP_iter_get(%0, %1, %2, %3, %4); __m != MAP_NULL; __m = MAP_iter_next(__m, MAP_NULL, %1, %2, %3, %4))
-    
 
 // Map structure
 MEM_struct MAP_struct
@@ -20,6 +19,7 @@ MEM_struct MAP_struct
     Map:MAP_struct_left,
     Map:MAP_struct_right,
     Map:MAP_struct_parent,
+    MAP_struct_key_hash,
     Pointer:MAP_struct_key_ptr,
     MAP_struct_key_size,
     Pointer:MAP_struct_value_ptr,
@@ -45,37 +45,59 @@ static stock Pointer:copy_mem(Pointer:ptr, size)
     return ret;
 }
 
+// Hash key
+static stock MAP_hash_key(Pointer:key_ptr, key_size)
+{
+    new ret;
+    for (new i = 0; i < key_size; i++)
+    {
+        ret += MEM_get_val(key_ptr, i);
+    }
+    return ret;
+}
+
 // Map node compare
-static stock MAP_node_compare(Map:map, Pointer:key_ptr, key_size)
+static stock MAP_node_compare(Map:map, key_hash, Pointer:key_ptr, key_size)
 {
     new ret = 0;
     if (map != MAP_NULL)
     {
         new m[MAP_struct], ok, nk;
         MEM_get_arr(Pointer:map, _, m);
-        if (key_size < m[MAP_struct_key_size])
+        if (key_hash < m[MAP_struct_key_hash])
         {
             ret = -1;
         }
-        else if (key_size > m[MAP_struct_key_size])
+        else if (key_hash > m[MAP_struct_key_hash])
         {
             ret = 1;
         }
         else
         {
-            for (new i = 0; i < key_size; i++)
+            if (key_size < m[MAP_struct_key_size])
             {
-                ok = MEM_get_val(m[MAP_struct_key_ptr], i);
-                nk = MEM_get_val(key_ptr, i);
-                if (nk < ok)
+                ret = -1;
+            }
+            else if (key_size > m[MAP_struct_key_size])
+            {
+                ret = 1;
+            }
+            else
+            {
+                for (new i = 0; i < key_size; i++)
                 {
-                    ret = -1;
-                    break;
-                }
-                else if (nk > ok)
-                {
-                    ret = 1;
-                    break;
+                    ok = MEM_get_val(m[MAP_struct_key_ptr], i);
+                    nk = MEM_get_val(key_ptr, i);
+                    if (nk < ok)
+                    {
+                        ret = -1;
+                        break;
+                    }
+                    else if (nk > ok)
+                    {
+                        ret = 1;
+                        break;
+                    }
                 }
             }
         }
@@ -92,6 +114,7 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
         if (map != MAP_NULL)
         {
             new m[MAP_struct];
+            m[MAP_struct_key_hash] = MAP_hash_key(key_ptr, key_size);
             m[MAP_struct_key_ptr] = copy_mem(key_ptr, key_size);
             m[MAP_struct_key_size] = key_size;
             m[MAP_struct_value_ptr] = copy_mem(value_ptr, value_size);
@@ -101,10 +124,10 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
     }
     else
     {
-        new Map:om = map, Map:nm, c;
+        new Map:om = map, Map:nm, c, key_hash = MAP_hash_key(key_ptr, key_size);
         while (om != MAP_NULL)
         {
-            c = MAP_node_compare(om, key_ptr, key_size);
+            c = MAP_node_compare(om, key_hash, key_ptr, key_size);
             if (c < 0)
             {
                 nm = Map:MEM_get_val(Pointer:om, _:MAP_struct_left);
@@ -115,6 +138,7 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
                     {
                         new m[MAP_struct];
                         m[MAP_struct_parent] = om;
+                        m[MAP_struct_key_hash] = key_hash;
                         m[MAP_struct_key_ptr] = copy_mem(key_ptr, key_size);
                         m[MAP_struct_key_size] = key_size;
                         m[MAP_struct_value_ptr] = copy_mem(value_ptr, value_size);
@@ -139,6 +163,7 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
                     {
                         new m[MAP_struct];
                         m[MAP_struct_parent] = om;
+                        m[MAP_struct_key_hash] = key_hash;
                         m[MAP_struct_key_ptr] = copy_mem(key_ptr, key_size);
                         m[MAP_struct_key_size] = key_size;
                         m[MAP_struct_value_ptr] = copy_mem(value_ptr, value_size);
@@ -166,10 +191,10 @@ static stock MAP_insert(&Map:map, Pointer:key_ptr, key_size, Pointer:value_ptr, 
 // Map find
 static stock Map:MAP_find(Map:map, Pointer:key_ptr, key_size)
 {
-    new Map:ret, Map:om = map, c;
+    new Map:ret, Map:om = map, c, key_hash = MAP_hash_key(key_ptr, key_size);
     while (om != MAP_NULL)
     {
-        c = MAP_node_compare(om, key_ptr, key_size);
+        c = MAP_node_compare(om, key_hash, key_ptr, key_size);
         if (c < 0)
         {
             om = Map:MEM_get_val(Pointer:om, _:MAP_struct_left);
