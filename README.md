@@ -1,4 +1,4 @@
-# Map implementation in PAWN
+# Hash-map implementation in PAWN
 
 ## Description
 This is a map data structure implementation in PAWN using binary search tree.
