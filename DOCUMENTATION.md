@@ -1,4 +1,4 @@
-# Map implementation in PAWN
+# Hash-map implementation in PAWN
 
 ## Important
 Use `MAP_clear` if you don't need your map anymore, to prevent memory leaks!
@@ -32,9 +32,9 @@ MAP_insert_val_arr(map, 1, arr);
 ```
 
 ### MAP_insert_arr_val
-####Description
+#### Description
 Map insert (key[], value)
-####Syntax
+#### Syntax
 ```C
 MAP_insert_arr_val(&Map:map, const key[], key_size = sizeof key, value)
 ```
