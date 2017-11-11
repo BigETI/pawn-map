@@ -1,4 +1,4 @@
-# Map implementation in PAWN
+# Hash-map implementation in PAWN
 
 ## Important
 Use `MAP_clear` if you don't need your map anymore, to prevent memory leaks!
