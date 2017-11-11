@@ -45,13 +45,25 @@ static stock Pointer:copy_mem(Pointer:ptr, size)
     return ret;
 }
 
-// Hash key
+// Positive integer power
+static stock ipow(a, b)
+{
+    new ret = 1;
+    for (new i; i < b; i++)
+    {
+        ret *= a;
+    }
+    return ret;
+}
+
+// Map hash key
+// From Java String hashCode(): s[0]*31^(n - 1) + s[1]*31^(n - 2) + ... + s[n - 1]
 static stock MAP_hash_key(Pointer:key_ptr, key_size)
 {
     new ret;
-    for (new i = 0; i < key_size; i++)
+    for (new i; i < key_size; i++)
     {
-        ret += MEM_get_val(key_ptr, i);
+        ret += MEM_get_val(key_ptr, i) * ipow(31, key_size - (i + 1));
     }
     return ret;
 }
@@ -59,7 +71,7 @@ static stock MAP_hash_key(Pointer:key_ptr, key_size)
 // Map node compare
 static stock MAP_node_compare(Map:map, key_hash, Pointer:key_ptr, key_size)
 {
-    new ret = 0;
+    new ret;
     if (map != MAP_NULL)
     {
         new m[MAP_struct], ok, nk;
