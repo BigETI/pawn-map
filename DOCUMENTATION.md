@@ -27,7 +27,7 @@ MAP_insert_val_arr(&Map:map, key, const value[], value_size = sizeof value)
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...};
+new Map:map, arr[10] = { 100, ... };
 MAP_insert_val_arr(map, 1, arr);
 ```
 
@@ -40,7 +40,7 @@ MAP_insert_arr_val(&Map:map, const key[], key_size = sizeof key, value)
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...};
+new Map:map, arr[10] = { 100, ... };
 MAP_insert_arr_val(map, arr, 1);
 ```
 
@@ -53,7 +53,7 @@ MAP_insert_arr_arr(&Map:map, const key[], key_size = sizeof key, const value[], 
 ```
 #### Example
 ```C
-new Map:map, arr1[10] = {100, ...}, arr2[20] = {200, ...};
+new Map:map, arr1[10] = { 100, ... }, arr2[20] = { 200, ... };
 MAP_insert_arr_arr(map, arr1, _, arr2);
 ```
 
@@ -79,7 +79,7 @@ MAP_insert_arr_str(&Map:map, const key[], key_size = sizeof key, const value[])
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...};
+new Map:map, arr[10] = { 100, ... };
 MAP_insert_arr_str(map, arr, _, "This is a test.");
 ```
 
@@ -118,82 +118,82 @@ MAP_insert_str_arr(&Map:map, const key[], const value[], value_size = sizeof val
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...};
+new Map:map, arr[10] = { 100, ... };
 MAP_insert_str_arr(map, "This is a test.", arr);
 ```
 
-### MAP_get_ptr_size_val
+### MAP_get_ptr_val
 #### Description
-Map get pointer and size (key)
+Map get pointer (key)
 #### Returns
-Pointer of the value, otherwise `MAP_MEM_NULL`
+Pointer of the value, otherwise `MEM_NULLPTR`
 #### Syntax
 ```C
-Pointer:MAP_get_ptr_size_val(Map:map, key, &value_size)
+Pointer:MAP_get_ptr_val(Map:map, key)
 ```
 #### Example
 ```C
-new Map:map, Pointer:ptr, value_size;
+new Map:map, Pointer:ptr;
 MAP_insert_val_str(map, 1, "This is a test.");
-ptr = MAP_get_ptr_size_val(map, 1, value_size);
-if (ptr == MAP_MEM_NULL)
+ptr = MAP_get_ptr_val(map, 1);
+if (ptr == MEM_NULLPTR)
 {
 	print("Value not found.");
 }
 else
 {
 	printf("Value pointer: 0x%x", _:ptr);
-	printf("Value size: %d", value_size);
+	printf("Value size: %d", MEM_get_size(ptr));
 }
 ```
 
-### MAP_get_ptr_size_arr
+### MAP_get_ptr_arr
 #### Description
-Map get pointer and size (key[])
+Map get pointer (key[])
 #### Returns
-Pointer of the value, otherwise `MAP_MEM_NULL`
+Pointer of the value, otherwise `MEM_NULLPTR`
 #### Syntax
 ```C
-Pointer:MAP_get_ptr_size_arr(Map:map, const key[], key_size, &value_size)
+Pointer:MAP_get_ptr_arr(Map:map, const key[], key_size = sizeof key)
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...}, Pointer:ptr, value_size;
+new Map:map, arr[10] = { 100, ... }, Pointer:ptr;
 MAP_insert_arr_str(map, arr, _, "This is a test.");
-ptr = MAP_get_ptr_size_arr(map, arr, value_size);
-if (ptr == MAP_MEM_NULL)
+ptr = MAP_get_ptr_arr(map, arr);
+if (ptr == MEM_NULLPTR)
 {
 	print("Value not found.");
 }
 else
 {
 	printf("Value pointer: 0x%x", _:ptr);
-	printf("Value size: %d", value_size);
+	printf("Value size: %d", MEM_get_size(ptr));
 }
 ```
 
-### MAP_get_ptr_size_str
+### MAP_get_ptr_str
 #### Description
 Map get pointer and size (key[] as string)
 #### Returns
-Pointer of the value, otherwise `MAP_MEM_NULL`
+Pointer of the value, otherwise `MEM_NULLPTR`
 #### Syntax
 ```C
-Pointer:MAP_get_ptr_size_str(Map:map, const key[], &value_size)
+Pointer:MAP_get_ptr_str(Map:map, const key[])
 ```
 #### Example
 ```C
-new Map:map, Pointer:ptr, value_size;
+new Map:map, Pointer:ptr;
 MAP_insert_str_str(map, "This is a test.", "foo");
-ptr = MAP_get_ptr_size_str(map, "This is a test.", value_size);
-if (ptr == MAP_MEM_NULL)
+ptr = MAP_get_ptr_str(map, "This is a test.");
+if (ptr == MEM_NULLPTR)
 {
 	print("Value not found.");
 }
 else
 {
 	printf("Value pointer: 0x%x", _:ptr);
-	printf("Value size: %d", value_size);
+	printf("Value size: %d", MEM_get_size(ptr));
 }
 ```
 
@@ -224,7 +224,7 @@ bool:MAP_contains_arr(Map:map, const key[], key_size = sizeof key)
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...};
+new Map:map, arr[10] = { 100, ... };
 MAP_insert_arr_val(map, arr, _, 1);
 printf("Value%s found", (MAP_contains_arr(map, arr) ? ("") : (" not")));
 ```
@@ -270,7 +270,7 @@ MAP_get_val_arr(Map:map, key, value[], value_size = sizeof value)
 ```
 #### Example
 ```C
-new Map:map, arr1[10] = {100, ...}, arr2[sizeof arr1];
+new Map:map, arr1[10] = { 100, ... }, arr2[sizeof arr1];
 MAP_insert(map, 1, arr1);
 MAP_get_val_arr(map, 1, arr2);
 for (new i; i < sizeof arr2; i++)
@@ -290,7 +290,7 @@ MAP_get_arr_val(Map:map, const key[], key_size = sizeof key)
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...};
+new Map:map, arr[10] = { 100, ... };
 MAP_insert_arr_val(map, arr, _, 1);
 printf("The value for arr is %d", MAP_get_arr_val(map, arr));
 ```
@@ -304,7 +304,7 @@ MAP_get_arr_arr(Map:map, const key[], key_size = sizeof key, value[], value_size
 ```
 #### Example
 ```C
-new Map:map, arr1[10] = {100, ...}, arr2[20] = {200, ...}, arr3[sizeof arr3];
+new Map:map, arr1[10] = { 100, ... }, arr2[20] = {200, ...}, arr3[sizeof arr3];
 MAP_insert_arr_arr(map, arr1, _, arr2);
 MAP_get_arr_arr(map, arr1, _, arr3);
 for (new i; i < sizeof arr3; i++)
@@ -338,7 +338,7 @@ MAP_get_str_arr(Map:map, const key[], value[], value_size = sizeof value)
 ```
 #### Example
 ```C
-new Map:map, arr[10] = {100, ...}, arr2[sizeof arr1];
+new Map:map, arr[10] = { 100, ... }, arr2[sizeof arr1];
 MAP_insert_str_arr(map, "This is a test.", arr1);
 MAP_get_str_arr(map, "This is a test.", arr2);
 for (new i; i < sizeof arr2; i++)
@@ -397,7 +397,7 @@ MAP_remove_arr(&Map:map, const key[], key_size = sizeof key)
 ```
 #### Example
 ```C
-new Map:map, arr1[10] = {100, ...}, arr2[20] = {200, ...}, arr3[30] = {300, ...};
+new Map:map, arr1[10] = { 100, ... }, arr2[20] = { 200, ... }, arr3[30] = { 300, ... };
 MAP_insert_arr_val(map, arr1, _, 1);
 MAP_insert_arr_val(map, arr2, _, 2);
 MAP_insert_arr_val(map, arr3, _, 3);
@@ -442,7 +442,7 @@ Map iterator get
 The value specified in `map`
 #### Syntax
 ```C
-Map:MAP_iter_get(Map:map, &Pointer:key_ptr, &Pointer:value_ptr, &key_size, &value_size)
+Map:MAP_iter_get(Map:map, &Pointer:key_ptr, &Pointer:value_ptr)
 ```
 #### Example
 ```C
@@ -450,7 +450,7 @@ new Map:map;
 MAP_insert_val_val(map, 1, 2);
 MAP_insert_val_val(map, 3, 4);
 MAP_insert_val_val(map, 5, 6);
-for (new Pointer:key_ptr, Pointer:value_ptr, key_size, value_size, Map:temp_map = MAP_iter_get(map, key_ptr, value_ptr, key_size, value_size); temp_map != MAP_NULL; temp_map = MAP_iter_next(temp_map, MAP_NULL, key_ptr, value_ptr, key_size, key_value))
+for (new Pointer:key_ptr, Pointer:value_ptr, Map:temp_map = MAP_iter_get(map, key_ptr, value_ptr); temp_map != MAP_NULL; temp_map = MAP_iter_next(temp_map, MAP_NULL, key_ptr, value_ptr))
 {
 	//
 }
@@ -463,7 +463,7 @@ Map iterator next
 Next map iterator from map iterator
 #### Syntax
 ```C
-Map:MAP_iter_get(Map:map, &Pointer:key_ptr, &Pointer:value_ptr, &key_size, &value_size)
+Map:MAP_iter_get(Map:map, &Pointer:key_ptr, &Pointer:value_ptr)
 ```
 #### Example
 ```C
@@ -471,17 +471,13 @@ new Map:map;
 MAP_insert_val_val(map, 1, 2);
 MAP_insert_val_val(map, 3, 4);
 MAP_insert_val_val(map, 5, 6);
-for (new Pointer:key_ptr, Pointer:value_ptr, key_size, value_size, Map:temp_map = MAP_iter_get(map, key_ptr, value_ptr, key_size, value_size); temp_map != MAP_NULL; temp_map = MAP_iter_next(temp_map, MAP_NULL, key_ptr, value_ptr, key_size, key_value))
+for (new Pointer:key_ptr, Pointer:value_ptr, Map:temp_map = MAP_iter_get(map, key_ptr, value_ptr); temp_map != MAP_NULL; temp_map = MAP_iter_next(temp_map, MAP_NULL, key_ptr, value_ptr))
 {
 	//
 }
 ```
 
 ## Documentation (Definitions)
-
-### MAP_MEM_NULL
-#### Description
-A null pointer
 
 ### MAP_NULL
 #### Description
@@ -492,7 +488,7 @@ Empty map (null pointer)
 Method to traverse through a map
 #### Syntax
 ```C
-MAP_foreach(Map:map : Pointer:key => Pointer:value, key_size => value_size)
+MAP_foreach(Pointer:key => Pointer:value : Map:map)
 ```
 #### Example
 ```C
@@ -500,25 +496,27 @@ new Map:map;
 MAP_insert_val_val(map, 1, 2);
 MAP_insert_val_val(map, 3, 4);
 MAP_insert_val_val(map, 5, 6);
-MAP_foreach(map : k => v, k_sz => v_sz)
+MAP_foreach(k => v : map)
 {
-	printf("0x%x => 0x%x, %d => %d, \"%d\" => \"%d\"", _:k, _:v, k_sz, v_sz, MEM::get_val(k, _), MEM::get_val(v, _));
+	printf("0x%x => 0x%x, %d => %d, \"%d\" => \"%d\"", _:k, _:v, MEM_get_size(k), MEM_get_size(v), MEM_get_val(k, _), MEM_get_val(v, _));
 }
 ```
 or
 ```C
-new Map:map, arr1[10] = {100, ...}, arr2[20] = {200, ...}, arr3[30] = {300, ...}, arr4[40] = {400, ...}, arr5[50] = {500, ...}, arr6[60] = {600, ...}, key[60], value[60], m_k_sz, m_v_sz;
+new Map:map, arr1[10] = { 100, ... }, arr2[20] = { 200, ... }, arr3[30] = { 300, ... }, arr4[40] = { 400, ... }, arr5[50] = { 500, ... }, arr6[60] = { 600, ... }, key[60], value[60], m_k_sz, m_v_sz, k_sz, v_sz;
 MAP_insert_arr_arr(map, arr1, _, arr2);
 MAP_insert_arr_arr(map, arr3, _, arr4);
 MAP_insert_arr_arr(map, arr5, _, arr6);
-MAP_foreach(map : k => v, k_sz => v_sz)
+MAP_foreach(k => v : map)
 {
+	k_sz = MEM_get_size(k);
+	v_sz = MEM_get_size(v);
 	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
 	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
-	MEM::zero(MEM::get_addr(key[0]), sizeof key);
-	MEM::zero(MEM::get_addr(value[0]), sizeof value);
-	MEM::get_arr(k, _, key, m_k_sz);
-	MEM::get_arr(v, _, value, m_v_sz);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(key[0]), sizeof key);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(value[0]), sizeof value);
+	MEM_get_arr(k, _, key, m_k_sz);
+	MEM_get_arr(v, _, value, m_v_sz);
 	printf("0x%x => 0x%x, %d => %d", _:k, _:v, k_sz, v_sz);
 	print("\tKey:");
 	for (new i = 0; i < m_k_sz; i++)
@@ -534,18 +532,20 @@ MAP_foreach(map : k => v, k_sz => v_sz)
 ```
 or
 ```C
-new Map:map, key[16], value[6], m_k_sz, m_v_sz;
+new Map:map, key[16], value[6], m_k_sz, m_v_sz, k_sz, v_sz;
 MAP_insert_str_str(map, "This is a test.", "foo");
 MAP_insert_str_str(map, "bar", "lorem");
 MAP_insert_str_str(map, "ipsum", "dolor");
-MAP_foreach(map : k => v, k_sz => v_sz)
+MAP_foreach(k => v : map)
 {
+	k_sz = MEM_get_size(k);
+	v_sz = MEM_get_size(v);
 	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
 	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
-	MEM::zero(MEM::get_addr(key[0]), sizeof key);
-	MEM::zero(MEM::get_addr(value[0]), sizeof value);
-	MEM::get_arr(k, _, key, m_k_sz);
-	MEM::get_arr(v, _, value, m_v_sz);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(key[0]), sizeof key);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(value[0]), sizeof value);
+	MEM_get_arr(k, _, key, m_k_sz);
+	MEM_get_arr(v, _, value, m_v_sz);
 	printf("0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:k, _:v, k_sz, v_sz, key, value);
 }
 ```
