@@ -549,3 +549,70 @@ MAP_foreach(k => v : map)
 	printf("0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:k, _:v, k_sz, v_sz, key, value);
 }
 ```
+
+### MAP_foreach_ex
+#### Description
+Method to traverse through a map
+#### Syntax
+```C
+MAP_foreach_ex(Pointer:key => Pointer:value, Map:sub_map : Map:map)
+```
+#### Example
+```C
+new Map:map;
+MAP_insert_val_val(map, 1, 2);
+MAP_insert_val_val(map, 3, 4);
+MAP_insert_val_val(map, 5, 6);
+MAP_foreach_ex(k => v, sub_map : map)
+{
+	printf("0x%x => 0x%x, 0x%x, %d => %d, \"%d\" => \"%d\"", _:k, _:v, _:sub_map, MEM_get_size(k), MEM_get_size(v), MEM_get_val(k, _), MEM_get_val(v, _));
+}
+```
+or
+```C
+new Map:map, arr1[10] = { 100, ... }, arr2[20] = { 200, ... }, arr3[30] = { 300, ... }, arr4[40] = { 400, ... }, arr5[50] = { 500, ... }, arr6[60] = { 600, ... }, key[60], value[60], m_k_sz, m_v_sz, k_sz, v_sz;
+MAP_insert_arr_arr(map, arr1, _, arr2);
+MAP_insert_arr_arr(map, arr3, _, arr4);
+MAP_insert_arr_arr(map, arr5, _, arr6);
+MAP_foreach_ex(k => v, sub_map : map)
+{
+	k_sz = MEM_get_size(k);
+	v_sz = MEM_get_size(v);
+	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
+	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(key[0]), sizeof key);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(value[0]), sizeof value);
+	MEM_get_arr(k, _, key, m_k_sz);
+	MEM_get_arr(v, _, value, m_v_sz);
+	printf("0x%x => 0x%x, 0x%d, %d => %d", _:k, _:v, _:sub_map, k_sz, v_sz);
+	print("\tKey:");
+	for (new i = 0; i < m_k_sz; i++)
+	{
+		printf("\t\t0x%x", key[i]);
+	}
+	print("\tValue:");
+	for (new i = 0; i < m_v_sz; i++)
+	{
+		printf("\t\t0x%x", value[i]);
+	}
+}
+```
+or
+```C
+new Map:map, key[16], value[6], m_k_sz, m_v_sz, k_sz, v_sz;
+MAP_insert_str_str(map, "This is a test.", "foo");
+MAP_insert_str_str(map, "bar", "lorem");
+MAP_insert_str_str(map, "ipsum", "dolor");
+MAP_foreach_ex(k => v, sub_map : map)
+{
+	k_sz = MEM_get_size(k);
+	v_sz = MEM_get_size(v);
+	m_k_sz = ((k_sz < sizeof key) ? k_sz : sizeof key);
+	m_v_sz = ((v_sz < sizeof value) ? v_sz : sizeof value);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(key[0]), sizeof key);
+	MEM_zero(UnmanagedPointer:MEM_get_addr(value[0]), sizeof value);
+	MEM_get_arr(k, _, key, m_k_sz);
+	MEM_get_arr(v, _, value, m_v_sz);
+	printf("0x%x => 0x%x, 0x%x, %d => %d, \"%s\" => \"%s\"", _:k, _:v, _:sub_map, k_sz, v_sz, key, value);
+}
+```

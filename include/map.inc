@@ -6,8 +6,9 @@
     #include <memory>
     #include <string>
     
-    #define MAP_NULL                    Map:MEM_NULLPTR
-    #define MAP_foreach%3(%0=>%1:%2)    for (new Pointer:%0, Pointer:%1, Map:__m = MAP_iter_get(%2, %0, %1); __m != MAP_NULL; __m = MAP_iter_next(__m, MAP_NULL, %0, %1))
+    #define MAP_NULL                        Map:MEM_NULLPTR
+    #define MAP_foreach%3(%0=>%1:%2)        MAP_foreach_ex(%0=>%1,__map__:%2)
+    #define MAP_foreach_ex%4(%0=>%1,%2:%3)  for (new Pointer:%0, Pointer:%1, Map:%2 = MAP_iter_get(%3, %0, %1); %2 != MAP_NULL; %2 = MAP_iter_next(%2, MAP_NULL, %0, %1))
 
 // Map structure
 MEM_struct MAP_struct
