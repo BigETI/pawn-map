@@ -552,7 +552,7 @@ stock MAP_remove_val(&Map:map, key)
         new Pointer:key_ptr = MEM_new_val(key);
         if (key_ptr != MEM_NULLPTR)
         {
-            MAP_remove(map, key_ptr, 1);
+            MAP_remove(map, key_ptr);
             MEM_delete(key_ptr);
         }
     }
