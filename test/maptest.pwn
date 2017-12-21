@@ -35,8 +35,8 @@ PrintMap(Map:map)
     }
 }
 
-// On filter script init
-public OnFilterScriptInit()
+// entry point
+main()
 {
     new Map:test_map = MAP_NULL, c, buf[128];
     print("\r\n[MAPTEST] Test 1");
