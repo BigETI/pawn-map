@@ -1,0 +1,11 @@
+{
+    "entry": "test/maptest.pwn",
+    "output": "test/maptest.amx",
+    "dependencies": ["Southclaws/samp-stdlib", "BigETI/pawn-memory/include"],
+    "builds": [
+        {
+            "name": "test",
+            "includes": ["./include"]
+        }
+    ]
+}
