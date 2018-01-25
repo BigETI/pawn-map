@@ -4,7 +4,7 @@
 This is a map data structure implementation in PAWN using binary search tree.
 
 ## Requirements
-- https://github.com/BigETI/samp-memory
+- https://github.com/BigETI/pawn-memory
 
 ## Documentation
 You can find the [documentation](https://github.com/BigETI/pawn-map/blob/master/DOCUMENTATION.md) here: https://github.com/BigETI/pawn-map/blob/master/DOCUMENTATION.md
