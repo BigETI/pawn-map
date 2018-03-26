@@ -1,7 +1,10 @@
 {
+    "user": "BigETI",
+    "repo": "pawn-map",
     "entry": "test/maptest.pwn",
     "output": "test/maptest.amx",
-    "dependencies": ["Southclaws/samp-stdlib", "BigETI/pawn-memory/include"],
+    "include_path": "include",
+    "dependencies": ["Southclaws/samp-stdlib", "BigETI/pawn-memory"],
     "builds": [
         {
             "name": "test",
