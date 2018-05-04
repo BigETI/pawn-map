@@ -4,6 +4,7 @@
 
 ## Description
 This is a map data structure implementation in PAWN using binary search tree.
+Detailed documentation can be checked out at the [wiki](https://github.com/BigETI/pawn-map/wiki).
 
 ## Installation
 ### Using sampctl
@@ -30,10 +31,10 @@ sampctl package install BigETI/pawn-map
 - https://github.com/sampctl/pawn-stdlib
 
 ## Documentation
-You can find the [documentation](https://github.com/BigETI/pawn-map/blob/master/DOCUMENTATION.md) here: https://github.com/BigETI/pawn-map/blob/master/DOCUMENTATION.md
+You can find the [documentation](https://github.com/BigETI/pawn-map/wiki) here: https://github.com/BigETI/pawn-map/wiki
 
 ## Licence
 You can find the [licence](https://github.com/BigETI/pawn-map/blob/master/LICENCE.md) here: https://github.com/BigETI/pawn-map/blob/master/LICENCE.md
 
-## How do I contribute?
-Just create a fork from this project, make your changes and create a pull request.
+## How to contribute to this project?
+Just create a fork out of this project, make your changes and create a pull request.
