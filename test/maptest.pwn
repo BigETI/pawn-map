@@ -31,14 +31,76 @@ PrintMap(Map:map)
         MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(value[0]), sizeof value);
         MEM_get_arr(k, _, key, (key_size < sizeof key) ? key_size : sizeof key);
         MEM_get_arr(v, _, value, (value_size < sizeof value) ? value_size : sizeof value);
-        printf("0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:k, _:v, key_size, value_size, key, value);
+        printf("\t0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:k, _:v, key_size, value_size, key, value);
     }
 }
 
-// entry point
+// Print maps in map
+PrintMapsInMap(Map:map)
+{
+    new key[128], value[128], key_size, value_size, Map:m;
+    printf("Map 0x%x:", _:map);
+    MAP_foreach(kx => vx : map)
+    {
+        key_size = MEM_get_size(kx);
+        value_size = MEM_get_size(vx);
+        if (value_size == 1)
+        {
+            m = Map:MEM_get_val(vx, 0);
+            if (m != MAP_NULL)
+            {
+                if (MEM_get_size(Pointer:m) == MAP_struct)
+                {
+                    printf("\tMap 0x%x:", _:m);
+                    MAP_foreach(ky => vy : m)
+                    {
+                        key_size = MEM_get_size(ky);
+                        value_size = MEM_get_size(vy);
+                        MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(key[0]), sizeof key);
+                        MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(value[0]), sizeof value);
+                        MEM_get_arr(ky, _, key, (key_size < sizeof key) ? key_size : sizeof key);
+                        MEM_get_arr(vy, _, value, (value_size < sizeof value) ? value_size : sizeof value);
+                        printf("\t\t0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:ky, _:vy, key_size, value_size, key, value);
+                    }
+                }
+                else
+                {
+                    MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(key[0]), sizeof key);
+                    MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(value[0]), sizeof value);
+                    MEM_get_arr(kx, _, key, (key_size < sizeof key) ? key_size : sizeof key);
+                    MEM_get_arr(vx, _, value, (value_size < sizeof value) ? value_size : sizeof value);
+                    printf("\t0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:kx, _:vx, key_size, value_size, key, value);
+                }
+            }
+            else
+            {
+                MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(key[0]), sizeof key);
+                MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(value[0]), sizeof value);
+                MEM_get_arr(kx, _, key, (key_size < sizeof key) ? key_size : sizeof key);
+                MEM_get_arr(vx, _, value, (value_size < sizeof value) ? value_size : sizeof value);
+                printf("\t0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:kx, _:vx, key_size, value_size, key, value);
+            }
+        }
+        else
+        {
+            MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(key[0]), sizeof key);
+            MEM_UM_zero(UnmanagedPointer:MEM_UM_get_addr(value[0]), sizeof value);
+            MEM_get_arr(kx, _, key, (key_size < sizeof key) ? key_size : sizeof key);
+            MEM_get_arr(vx, _, value, (value_size < sizeof value) ? value_size : sizeof value);
+            printf("\t0x%x => 0x%x, %d => %d, \"%s\" => \"%s\"", _:kx, _:vx, key_size, value_size, key, value);
+        }
+    }
+}
+
+// Entry point
 main()
 {
-    new Map:test_map = MAP_NULL, c, buf[128];
+    new Map:test_map = MAP_NULL, Map:test_map_a = MAP_NULL, Map:test_map_b = MAP_NULL, c, buf[128];
+    print("\r\n==================");
+    print("= Map unit test  =");
+    print("= Made by BigETI =");
+    print("= Loaded!        =");
+    print("==================\r\n");
     print("\r\n[MAPTEST] Test 1");
     PrintMap(test_map);
     c = MAP_count(test_map);
@@ -73,21 +135,32 @@ main()
     PrintMap(test_map);
     c = MAP_count(test_map);
     assertf(c == 0, "Invalid count (%d, expected 0) : Test #6", c);
+    print("\r\n[MAPTEST] Test 7");
+    MAP_insert_str_str(test_map_a, "a", "b");
+    MAP_insert_str_str(test_map_a, "cd", "ef");
+    MAP_insert_str_str(test_map_a, "ghi", "jkl");
+    MAP_insert_str_str(test_map_b, "m", "n");
+    MAP_insert_str_str(test_map_b, "op", "qs");
+    MAP_insert_str_str(test_map_b, "tuv", "wxy");
+    MAP_insert_str_val(test_map, "map a", _:test_map_a);
+    MAP_insert_str_val(test_map, "map b", _:test_map_b);
+    PrintMapsInMap(test_map);
+    c = MAP_count(test_map);
+    assertf(c == 2, "Invalid count (%d, expected 2) : Test #7", c);
+    c = MAP_count(test_map_a);
+    assertf(c == 3, "Invalid count (%d, expected 3) : Test #7", c);
+    c = MAP_count(test_map_b);
+    assertf(c == 3, "Invalid count (%d, expected 3) : Test #7", c);
+    print("\r\n[MAPTEST] Test 8");
+    MAP_clear(test_map);
+    MAP_clear(test_map_a);
+    MAP_clear(test_map_b);
+    c = MAP_count(test_map);
+    assertf(c == 0, "Invalid count (%d, expected 0) : Test #8", c);
+    c = MAP_count(test_map_a);
+    assertf(c == 0, "Invalid count (%d, expected 0) : Test #8", c);
+    c = MAP_count(test_map_b);
+    assertf(c == 0, "Invalid count (%d, expected 0) : Test #8", c);
     print("[MAPTEST] Test completed.");
-    print("\r\n==============================");
-    print("= Map unit test filterscript =");
-    print("=             Made by BigETI =");
-    print("= Loaded!                    =");
-    print("==============================\r\n");
     return 1;
-}
-
-// On filter script exit
-public OnFilterScriptExit()
-{
-    print("\r\n==============================");
-    print("= Map unit test filterscript =");
-    print("=             Made by BigETI =");
-    print("= Unloaded!                  =");
-    print("==============================\r\n");
 }
