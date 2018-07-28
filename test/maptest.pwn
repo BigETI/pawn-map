@@ -35,6 +35,28 @@ PrintMap(Map:map)
     }
 }
 
+// Print map
+PrintMap2(Map:map)
+{
+    new key_size, value_size, i;
+    printf("Map 0x%x:", _:map);
+    MAP_foreach(k => v : map)
+    {
+        key_size = MEM_get_size(k);
+        value_size = MEM_get_size(v);
+		printf("\"Key: 0x%x => %d", _:k, key_size);
+		for (i = 0; i < key_size; i++)
+		{
+			printf("\t\t%d: %d", i, MEM_get_val(k, i));
+		}
+		printf("\"Value: 0x%x => %d", _:v, value_size);
+		for (i = 0; i < value_size; i++)
+		{
+			printf("\t\t%d: %d", i, MEM_get_val(v, i));
+		}
+    }
+}
+
 // Print maps in map
 PrintMapsInMap(Map:map)
 {
@@ -124,7 +146,8 @@ main()
     print("\r\n[MAPTEST] Test 4");
     MAP_remove_str(test_map, "tuv");
     MAP_remove_str(test_map, "aaa");
-    PrintMap(test_map);
+    MAP_remove_val(test_map, 0);
+    PrintMap2(test_map);
     c = MAP_count(test_map);
     assertf(c == 5, "Invalid count (%d, expected 5) : Test #4", c);
     print("\r\n[MAPTEST] Test 5");
@@ -161,6 +184,17 @@ main()
     assertf(c == 0, "Invalid count (%d, expected 0) : Test #8", c);
     c = MAP_count(test_map_b);
     assertf(c == 0, "Invalid count (%d, expected 0) : Test #8", c);
+    print("\r\n[MAPTEST] Test 9");
+    MAP_insert_val_str(test_map, 0, "a");
+    MAP_insert_val_str(test_map, 1, "b");
+    MAP_insert_val_str(test_map, 2, "c");
+    MAP_insert_val_str(test_map, 3, "d");
+    PrintMap2(test_map);
+    MAP_remove_val(test_map, 0);
+    PrintMap2(test_map);
+    c = MAP_count(test_map);
+    assertf(c == 3, "Invalid count (%d, expected 3) : Test #9", c);
+    MAP_clear(test_map);
     print("[MAPTEST] Test completed.");
     return 1;
 }

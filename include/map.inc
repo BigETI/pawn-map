@@ -207,10 +207,6 @@ static stock Map:MAP_find_minimum(Map:map)
 // Map remove found
 static stock MAP_remove_found(&Map:parent_map, Map:found_map)
 {
-    if (found_map == parent_map)
-    {
-        parent_map = MAP_NULL;
-    }
     new m[MAP_struct], pm[MAP_struct], bool:hp;
     MEM_get_arr(Pointer:found_map, _, m);
     hp = (m[MAP_struct_parent] != MAP_NULL);
@@ -234,6 +230,10 @@ static stock MAP_remove_found(&Map:parent_map, Map:found_map)
                     MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:MAP_NULL);
                 }
             }
+            else
+            {
+                parent_map = MAP_NULL;
+            }
             MEM_delete(m[MAP_struct_key_ptr]);
             MEM_delete(m[MAP_struct_value_ptr]);
             MEM_delete(Pointer:found_map);
@@ -251,6 +251,10 @@ static stock MAP_remove_found(&Map:parent_map, Map:found_map)
                 {
                     MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:m[MAP_struct_right]);
                 }
+            }
+            else
+            {
+                parent_map = m[MAP_struct_right];
             }
             MEM_delete(m[MAP_struct_key_ptr]);
             MEM_delete(m[MAP_struct_value_ptr]);
@@ -272,6 +276,10 @@ static stock MAP_remove_found(&Map:parent_map, Map:found_map)
                 {
                     MEM_set_val(Pointer:m[MAP_struct_parent], _:MAP_struct_right, _:m[MAP_struct_left]);
                 }
+            }
+            else
+            {
+                parent_map = m[MAP_struct_left];
             }
             MEM_delete(m[MAP_struct_key_ptr]);
             MEM_delete(m[MAP_struct_value_ptr]);
