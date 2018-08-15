@@ -4,7 +4,7 @@
     "entry": "test/maptest.pwn",
     "output": "test/maptest.amx",
     "include_path": "include",
-    "dependencies": ["Southclaws/samp-stdlib", "BigETI/pawn-memory:2.0"],
+    "dependencies": ["sampctl/samp-stdlib", "BigETI/pawn-memory:2.0.1"],
     "builds": [
         {
             "name": "test",
