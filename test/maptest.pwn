@@ -189,8 +189,11 @@ main()
     MAP_insert_val_str(test_map, 1, "b");
     MAP_insert_val_str(test_map, 2, "c");
     MAP_insert_val_str(test_map, 3, "d");
+    MAP_insert_val_str(test_map, 4, "e");
     PrintMap2(test_map);
     MAP_remove_val(test_map, 0);
+    PrintMap2(test_map);
+    MAP_remove_val(test_map, 1);
     PrintMap2(test_map);
     c = MAP_count(test_map);
     assertf(c == 3, "Invalid count (%d, expected 3) : Test #9", c);
