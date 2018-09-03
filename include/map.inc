@@ -195,7 +195,7 @@ static stock Map:MAP_find_minimum(Map:map)
     new Map:ret = map, Map:m = map;
     while (m != MAP_NULL)
     {
-        m = Map:MEM_get_val(Pointer:map, _:MAP_struct_left);
+        m = Map:MEM_get_val(Pointer:m, _:MAP_struct_left);
         if (m != MAP_NULL)
         {
             ret = m;
