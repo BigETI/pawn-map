@@ -630,15 +630,15 @@ stock Map:MAP_iter_next(Map:map, Map:invoker, &Pointer:key_ptr, &Pointer:value_p
         if (m[MAP_struct_left] != MAP_NULL)
         {
             ret =
-				(invoker == m[MAP_struct_left])
-					? (m[MAP_struct_right] != MAP_NULL)
-						? MAP_iter_get(m[MAP_struct_right], key_ptr, value_ptr)
-						: MAP_iter_next(m[MAP_struct_parent], map, key_ptr, value_ptr)
-					: (m[MAP_struct_right] != MAP_NULL)
-					? (invoker == m[MAP_struct_right])
-						? MAP_iter_next(m[MAP_struct_parent], map, key_ptr, value_ptr)
-						: MAP_iter_get(m[MAP_struct_left], key_ptr, value_ptr)
-					: MAP_iter_get(m[MAP_struct_left], key_ptr, value_ptr)
+                (invoker == m[MAP_struct_left])
+                    ? (m[MAP_struct_right] != MAP_NULL)
+                        ? MAP_iter_get(m[MAP_struct_right], key_ptr, value_ptr)
+                        : MAP_iter_next(m[MAP_struct_parent], map, key_ptr, value_ptr)
+                    : (m[MAP_struct_right] != MAP_NULL)
+                    ? (invoker == m[MAP_struct_right])
+                        ? MAP_iter_next(m[MAP_struct_parent], map, key_ptr, value_ptr)
+                        : MAP_iter_get(m[MAP_struct_left], key_ptr, value_ptr)
+                    : MAP_iter_get(m[MAP_struct_left], key_ptr, value_ptr)
             ;
         }
         else if (m[MAP_struct_right] != MAP_NULL)
