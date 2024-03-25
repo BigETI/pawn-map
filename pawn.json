@@ -4,8 +4,14 @@
     "entry": "test/maptest.pwn",
     "output": "test/maptest.amx",
     "include_path": "include",
-    "dependencies": ["sampctl/pawn-stdlib", "BigETI/pawn-memory:2.0.1"],
-    "dev_dependencies": ["sampctl/samp-stdlib"],
+    "dependencies": [
+        "sampctl/pawn-stdlib",
+        "BigETI/pawn-memory:2.0.1"
+    ],
+    "dev_dependencies": [
+        "sampctl/samp-stdlib",
+        "Zeex/samp-plugin-crashdetect:v4.21"
+    ],
     "builds": [
         {
             "name": "test",
