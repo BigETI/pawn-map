@@ -6,7 +6,7 @@
     "include_path": "include",
     "dependencies": [
         "sampctl/pawn-stdlib",
-        "BigETI/pawn-memory:2.0.1"
+        "BigETI/pawn-memory"
     ],
     "dev_dependencies": [
         "sampctl/samp-stdlib",
